@@ -3,7 +3,7 @@ package entities
 import "time"
 
 type Customer struct {
-	Name      string
-	Document  string
-	birthDate time.Time
+	Name      string    `json:"name"`
+	Document  string    `json:"document"`
+	BirthDate time.Time `json:"birth_date"`
 }

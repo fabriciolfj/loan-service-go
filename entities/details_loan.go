@@ -7,5 +7,5 @@ import (
 
 type DetailsLoan struct {
 	Value       decimal.Decimal
-	requestDate time.Time
+	RequestDate time.Time
 }
