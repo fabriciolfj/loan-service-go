@@ -12,7 +12,7 @@ import (
 )
 
 func appHttp() {
-	pc, err := InitControllerLoan()
+	pc, err := InitControllerLoanWire()
 	if err != nil {
 		log.Fatal("Failed to initialize controller:", err)
 	}
@@ -46,7 +46,7 @@ func appHttp() {
 }
 
 func listenerProcessLoan() {
-	app, err := InitListenerProcessLoan()
+	app, err := InitListenerProcessLoanWire()
 
 	if err != nil {
 		panic(err)

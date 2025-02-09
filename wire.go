@@ -13,7 +13,7 @@ import (
 	"github.com/google/wire"
 )
 
-func InitControllerLoan() (*controller.LoanController, error) {
+func InitControllerLoanWire() (*controller.LoanController, error) {
 	wire.Build(
 		configuration.ProvideKafkaProperties,
 		configuration.ProvideKafkaConfig,
@@ -28,7 +28,7 @@ func InitControllerLoan() (*controller.LoanController, error) {
 	return &controller.LoanController{}, nil
 }
 
-func InitListenerProcessLoan() (*listeners.LoanProcessListener, error) {
+func InitListenerProcessLoanWire() (*listeners.LoanProcessListener, error) {
 	wire.Build(
 		configuration.ProvideKafkaProperties,
 		configuration.ProvideKafkaConfig,
