@@ -12,10 +12,13 @@ import (
 )
 
 func appHttp() {
-	mux := http.NewServeMux()
+	pc, err := InitControllerLoan()
+	if err != nil {
+		log.Fatal("Failed to initialize controller:", err)
+	}
 
-	pc, _ := InitControllerLoan()
-	http.HandleFunc("/api/v1/loan", controller.RecoveryMiddleware(pc.HandlerLoan))
+	mux := http.NewServeMux()
+	mux.HandleFunc("/api/v1/loan", controller.RecoveryMiddleware(pc.HandlerLoan))
 
 	server := &http.Server{
 		Addr:    ":8000",
@@ -23,13 +26,13 @@ func appHttp() {
 	}
 
 	go func() {
-		if err := http.ListenAndServe(":8000", nil); err != nil {
+		if err := server.ListenAndServe(); err != nil {
 			log.Fatal("fail star server", err)
 		}
 	}()
 
 	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	<-quit
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -73,7 +76,6 @@ func listenerProcessLoan() {
 }
 
 func main() {
-	listenerProcessLoan()
-
+	go listenerProcessLoan()
 	appHttp()
 }
