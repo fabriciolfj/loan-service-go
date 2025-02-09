@@ -15,12 +15,15 @@ import (
 
 func InitControllerLoan() (*controller.LoanController, error) {
 	wire.Build(
-		configuration.KafkaProperties,
-		configuration.KafkaConfig,
+		configuration.ProvideKafkaProperties,
+		configuration.ProvideKafkaConfig,
 		producers.ProviderLoanProcessProducer,
-		adapters.LoanNotifyPendingAdapter,
+		adapters.ProvideLoanNotifyPendingAdapter,
+		adapters.ProvideSaveLoanAdapter,
+		wire.Bind(new(usecases.SaveLoan), new(*adapters.SaveLoanAdapter)),
+		wire.Bind(new(usecases.NotifyLoanPending), new(*adapters.LoanNotifyPendingAdapter)),
 		usecases.ProviderProcessLoanUseCase,
-		controller.LoanController)
+		controller.ProviderLoanController)
 
 	return &controller.LoanController{}, nil
 }

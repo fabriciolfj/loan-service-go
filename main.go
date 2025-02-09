@@ -1,19 +1,21 @@
 package main
 
 import (
+	"context"
 	"github.com/fabriciolfj/loan-service-go/controller"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 func appHttp() {
 	mux := http.NewServeMux()
 
-	pc, _ := InitializeProductControllerWire()
-	http.HandleFunc("/products", controller.RecoveryMiddleware(pc.HandleProduct))
+	pc, _ := InitControllerLoan()
+	http.HandleFunc("/api/v1/loan", controller.RecoveryMiddleware(pc.HandlerLoan))
 
 	server := &http.Server{
 		Addr:    ":8000",
@@ -22,7 +24,7 @@ func appHttp() {
 
 	go func() {
 		if err := http.ListenAndServe(":8000", nil); err != nil {
-			log.Log.Fatal("fail star server", err)
+			log.Fatal("fail star server", err)
 		}
 	}()
 
@@ -34,10 +36,10 @@ func appHttp() {
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
-		log.Log.Fatal("Server forced to shutdown: ", err)
+		log.Fatal("Server forced to shutdown: ", err)
 	}
 
-	log.Log.Info("Server exiting")
+	log.Printf("Server exiting")
 }
 
 func listenerProcessLoan() {
@@ -47,12 +49,12 @@ func listenerProcessLoan() {
 		panic(err)
 	}
 
-	igChan := make(chan os.Signal, 1)
+	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	errChan := make(chan error, 2)
 
 	go func() {
-		if err := listener.Start(); err != nil {
+		if err := app.Start(); err != nil {
 			errChan <- err
 		}
 	}()
@@ -72,4 +74,6 @@ func listenerProcessLoan() {
 
 func main() {
 	listenerProcessLoan()
+
+	appHttp()
 }

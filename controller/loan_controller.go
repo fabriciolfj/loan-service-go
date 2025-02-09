@@ -37,7 +37,7 @@ func badRequest(w http.ResponseWriter, err error) {
 	return
 }
 
-func (pc *LoanController) HandlerProduct(w http.ResponseWriter, r *http.Request) {
+func (pc *LoanController) HandlerLoan(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		pc.create(w, r)

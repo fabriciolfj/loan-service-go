@@ -18,7 +18,7 @@ func ProvideLoanNotifyPendingAdapter(producer *producers.LoanProcessProducer) *L
 	}
 }
 
-func (adapter *LoanNotifyPendingAdapter) NotifyLoanPending(entity entities.Loan) error {
+func (adapter *LoanNotifyPendingAdapter) NotifyLoanPending(loan *entities.Loan) error {
 	prop, err := properties.LoadFile("config.properties", properties.UTF8)
 	if err != nil {
 		log.Fatal("error loading properties topic nofify loan pending:", err)
@@ -27,7 +27,7 @@ func (adapter *LoanNotifyPendingAdapter) NotifyLoanPending(entity entities.Loan)
 
 	topic := prop.GetString("topic.request.process.loan", "")
 
-	message, err := json.Marshal(entity)
+	message, err := json.Marshal(loan)
 	if err != nil {
 		log.Fatal("failed to marshal loan: %w", err)
 		return err
