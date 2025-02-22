@@ -1,4 +1,4 @@
-package dtorequestloan
+package controller
 
 import (
 	"github.com/fabriciolfj/loan-service-go/entities"

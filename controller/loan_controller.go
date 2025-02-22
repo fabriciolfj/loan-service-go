@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	dtorequestloan "github.com/fabriciolfj/loan-service-go/model_loan_process"
 	"github.com/fabriciolfj/loan-service-go/usecases"
 	"net/http"
 )
@@ -38,7 +37,7 @@ func (controller *LoanController) find(w http.ResponseWriter, r *http.Request) {
 }
 
 func (controller *LoanController) create(w http.ResponseWriter, r *http.Request) {
-	var request dtorequestloan.LoanRequest
+	var request LoanRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 
 	if err != nil {
@@ -61,6 +60,15 @@ func (pc *LoanController) HandlerLoan(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		pc.create(w, r)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func (pc *LoanController) HandlerLoanGetPath(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		pc.find(w, r)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}

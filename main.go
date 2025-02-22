@@ -19,6 +19,7 @@ func appHttp() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/v1/loan", controller.RecoveryMiddleware(pc.HandlerLoan))
+	mux.HandleFunc("/api/v1/loan/{code}", controller.RecoveryMiddleware(pc.HandlerLoanGetPath))
 
 	server := &http.Server{
 		Addr:    ":8000",
