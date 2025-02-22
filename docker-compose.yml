@@ -1,20 +1,23 @@
-version: "3.3"
+version: "3.8"
 services:
-  postgres_loan:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    ports:
-      - "5432:5432"
 
-  postgres_commission:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
     ports:
-      - "5433:5432"
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: loan
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+    networks:
+      - mysql-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+      interval: 5s
 
   zookeeper:
     image: zookeeper:3.6.1
@@ -52,4 +55,6 @@ services:
 networks:
   kafka-net:
     name: kafka-net
+    driver: bridge
+  mysql-network:
     driver: bridge

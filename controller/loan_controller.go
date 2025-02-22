@@ -8,13 +8,33 @@ import (
 )
 
 type LoanController struct {
-	processUseCase *usecases.ProcessLoanUseCase
+	processUseCase  *usecases.ProcessLoanUseCase
+	findLoanUseCase *usecases.GetLoanUseCase
 }
 
-func ProviderLoanController(processUseCase *usecases.ProcessLoanUseCase) (*LoanController, error) {
+func ProviderLoanController(processUseCase *usecases.ProcessLoanUseCase, findLoanUseCase *usecases.GetLoanUseCase) (*LoanController, error) {
 	return &LoanController{
-		processUseCase: processUseCase,
+		processUseCase:  processUseCase,
+		findLoanUseCase: findLoanUseCase,
 	}, nil
+}
+
+func (controller *LoanController) find(w http.ResponseWriter, r *http.Request) {
+	code := r.URL.Query().Get("code")
+
+	result, err := controller.findLoanUseCase.Execute(code)
+	if err != nil {
+		badRequest(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		badRequest(w, err)
+		return
+	}
 }
 
 func (controller *LoanController) create(w http.ResponseWriter, r *http.Request) {

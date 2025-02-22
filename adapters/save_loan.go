@@ -1,15 +1,24 @@
 package adapters
 
-import "github.com/fabriciolfj/loan-service-go/entities"
+import (
+	"github.com/fabriciolfj/loan-service-go/entities"
+	"github.com/fabriciolfj/loan-service-go/repositories"
+	"log"
+)
 
 type SaveLoanAdapter struct {
+	repository repositories.LoanRepository
 }
 
-func ProvideSaveLoanAdapter() *SaveLoanAdapter {
-	return &SaveLoanAdapter{}
+func ProvideSaveLoanAdapter(repository *repositories.LoanRepository) *SaveLoanAdapter {
+	return &SaveLoanAdapter{
+		repository: *repository,
+	}
 }
 
 func (adapter *SaveLoanAdapter) SaveLoan(loan *entities.Loan) error {
-	println("Saving Loan", loan)
-	return nil
+	data := LoanDataMapper(loan)
+	log.Printf("Saving Loan %v", data)
+
+	return adapter.repository.SaveLoan(data)
 }

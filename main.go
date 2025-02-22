@@ -57,9 +57,12 @@ func listenerProcessLoan() {
 	errChan := make(chan error, 2)
 
 	go func() {
-		if err := app.Start(); err != nil {
-			errChan <- err
-		}
+		defer func() {
+			if err := app.Start(); err != nil {
+				errChan <- err
+			}
+		}()
+
 	}()
 
 	select {
