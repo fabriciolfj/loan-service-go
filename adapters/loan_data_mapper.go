@@ -48,6 +48,7 @@ func LoanEntityMapper(data *data.LoanData) *entities.Loan {
 			Value:       data.Value,
 			RequestDate: data.RequestDate,
 		},
-		Status: entities.LoanStatus(data.Status),
+		Suggestions: suggestions,
+		Status:      entities.LoanStatus(data.Status),
 	}
 }

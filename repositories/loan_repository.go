@@ -21,7 +21,7 @@ func (r *LoanRepository) SaveLoan(data *data.LoanData) error {
 
 func (r *LoanRepository) FindLoanByCode(code string) (*data.LoanData, error) {
 	var loan data.LoanData
-	result := r.db.Where(&data.LoanData{Code: code}).First(&loan)
+	result := r.db.Preload("Suggestions").Where(&data.LoanData{Code: code}).First(&loan)
 
 	return &loan, result.Error
 }
